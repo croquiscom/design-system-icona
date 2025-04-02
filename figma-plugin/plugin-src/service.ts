@@ -70,6 +70,21 @@ const findComponentInNode = (
       };
     }
 
+    case "INSTANCE": {
+      const svgName = makeComponentName({
+        componentSetName: setName,
+        componentName: node.name,
+        stringCase: "lower",
+        separator: "_",
+      });
+
+      return {
+        id: node.id,
+        name: svgName,
+        description: description
+      };
+    }
+
     case "COMPONENT_SET": {
       return node.children.flatMap((child: any) => {
         return findComponentInNode(
@@ -93,6 +108,11 @@ const findComponentInNode = (
  */
 function removeAndStoreFills(node: SceneNode): Map<string, readonly Paint[]> {
   const fillsMap = new Map<string, readonly Paint[]>();
+
+  // InstanceNode는 건너뛰기
+  if (node.type === "INSTANCE") {
+    return fillsMap;
+  }
 
   if (node.type === "FRAME" && "fills" in node && node.id) {
     fillsMap.set(node.id, node.fills as readonly Paint[]);
@@ -120,6 +140,11 @@ function restoreFills(
   node: SceneNode,
   fillsMap: Map<string, readonly Paint[]>,
 ) {
+  // InstanceNode는 건너뛰기
+  if (node.type === "INSTANCE") {
+    return;
+  }
+
   if (
     node.type === "FRAME" &&
     "fills" in node &&
@@ -141,7 +166,8 @@ export function getAssetFramesInFrame(targetFrame: FrameNode): ExtractedNode[] {
     if (
       child.type === "COMPONENT" ||
       child.type === "FRAME" ||
-      child.type === "COMPONENT_SET"
+      child.type === "COMPONENT_SET" || 
+      child.type === "INSTANCE"
     ) {
       return findComponentInNode(child);
     }
