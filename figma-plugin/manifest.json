@@ -1,7 +1,7 @@
 {
   "name": "Icona",
-  "id": "1246320822364150095",
   "api": "1.0.0",
+  "id": "1489144036985808863",
   "main": "dist/code.js",
   "ui": "dist/index.html",
   "editorType": [
@@ -20,5 +20,6 @@
       "https://api.github.com",
       "https://api.june.so"
     ]
-  }
+  },
+  "documentAccess": "dynamic"
 }
